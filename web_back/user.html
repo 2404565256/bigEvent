@@ -24,26 +24,27 @@
                 <div class="form-group">
                     <label for="inputEmail3" class="col-sm-2 control-label">用户名称：</label>
                     <div class="col-sm-4">
-                        <input type="text" class="form-control username" id="inputEmail3" value="李思思">
+                        <input type="text" class="form-control username" name='username' id="inputEmail3" value="李思思">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="inputEmail3" class="col-sm-2 control-label">昵称：</label>
                     <div class="col-sm-4">
-                        <input type="text" class="form-control nickname" id="inputEmail3" value="思思">
+                        <input type="text" class="form-control nickname" name='nickname' id="inputEmail3" value="思思">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="inputEmail3" class="col-sm-2 control-label">邮箱：</label>
                     <div class="col-sm-4">
-                        <input type="text" class="form-control email" id="inputEmail3" value="lisisi@126.com">
+                        <input type="text" class="form-control email" name='email' id="inputEmail3"
+                            value="lisisi@126.com">
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="inputPassword3" class="col-sm-2 control-label">用户图标：</label>
                     <div class="col-sm-10">
-                        <img src="images/2.jpg" alt="" class="user_pic">
+                        <img src="images/2.jpg" alt="" class="user_pic" name='user_pic'>
                         <input type="file" id="exampleInputFile">
                     </div>
                 </div>
@@ -51,7 +52,8 @@
                 <div class="form-group">
                     <label for="inputEmail3" class="col-sm-2 control-label">密码：</label>
                     <div class="col-sm-4">
-                        <input type="password" class="form-control password" id="inputEmail3" value="12345678">
+                        <input type="password" class="form-control password" name='password' id="inputEmail3"
+                            value="12345678">
                     </div>
                 </div>
 
@@ -98,16 +100,21 @@
 
        */
         //user 页面用户信息获取
-        $.ajax({
-            url: 'https://autumnfish.cn/big32/admin/userinfo_get',
-            type: 'get',
-            success: function (xhrdata) {
-                for (var key in xhrdata.data) {
-                    $('input.' + key).val(xhrdata.data[key])
+        function userNm() {
+            $.ajax({
+                url: 'https://autumnfish.cn/big32/admin/userinfo_get',
+                type: 'get',
+                success: function (xhrdata) {
+                    for (var key in xhrdata.data) {
+                        $('input.' + key).val(xhrdata.data[key])
+                    }
+                    $('.user_pic').attr('src', xhrdata.data.user_pic)
                 }
-                $('.user_pic').attr('src', xhrdata.data.user_pic)
-            }
-        })
+            })
+        }
+
+        //初始化
+        userNm()
 
         //增加图片预览功能
         $('#exampleInputFile').change(function () {
@@ -121,6 +128,25 @@
 
         })
 
+        //点击修改个人信息
+        $('.btn-success').click(function (e) {
+            e.preventDefault()
+            var formTj1 = new FormData($('form')[0])
+            // console.log(formTj1);
+            $.ajax({
+                url: 'https://autumnfish.cn/big32/admin/userinfo_edit',
+                type: 'post',
+                contentType: false,
+                processData: false,
+                data: formTj1,
+                success: function (xhrData) {
+                    // console.log(xhrData);
+                    if (xhrData.code == 200) {
+                        userNm()
+                    }
+                }
+            })
+        })
 
 
     </script>
