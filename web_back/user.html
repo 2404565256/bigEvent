@@ -97,6 +97,7 @@
 
 
        */
+        //user 页面用户信息获取
         $.ajax({
             url: 'https://autumnfish.cn/big32/admin/userinfo_get',
             type: 'get',
@@ -107,6 +108,21 @@
                 $('.user_pic').attr('src', xhrdata.data.user_pic)
             }
         })
+
+        //增加图片预览功能
+        $('#exampleInputFile').change(function () {
+            //<input type="file" id="exampleInputFile">    
+
+            //input file中的files中的文件对象   里有长传的临时值
+            var ico = this.files[0]
+            //图片转零时URL
+            var crskU = URL.createObjectURL(ico)
+            $('.user_pic').attr('src', crskU)
+
+        })
+
+
+
     </script>
 
 </body>

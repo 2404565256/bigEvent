@@ -151,7 +151,6 @@
             url: 'https://autumnfish.cn/big32/admin/getuser',
             type: 'get',
             success: function (xhrData) {
-                console.log(xhrData);
                 $('.user_info img').attr('src', xhrData.data.user_pic)
                 $('.user_info span i').text(xhrData.data.nickname)
                 $('.user_center_link img').attr('src', xhrData.data.user_pic)
