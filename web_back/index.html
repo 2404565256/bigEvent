@@ -148,7 +148,7 @@
 
 //首页用户名获取
         $.ajax({
-            url: 'https://autumnfish.cn/big32/admin/getuser',
+            url: 'http://localhost:8000/admin/getuser',
             type: 'get',
             success: function (xhrData) {
                 $('.user_info img').attr('src', xhrData.data.user_pic)

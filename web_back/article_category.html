@@ -141,12 +141,12 @@
 
 
             // 文章类别数据获取  方法抽取
-            function cqAjax() {
+            const cqAjax = () => {
                 $.ajax({
-                    url: 'https://autumnfish.cn/big32/admin/category_search',
+                    url: 'http://localhost:8000/admin/category_search',
                     type: 'get',
                     success: (xhrData) => {
-                        // console.log(xhrData);
+                        console.log(xhrData);
                         const html = template('lB-model', xhrData)
                         document.querySelector('tbody').innerHTML = html
                     }
@@ -159,17 +159,17 @@
 
 
 
-            $('#model_add').click(function () {
+            $('#model_add').click(() => {
                 const recipientName = $('#recipientName').val()
                 const recipientblme = $('#recipientblme').val()
                 $.ajax({
-                    url: 'https://autumnfish.cn/big32/admin/category_add',
+                    url: 'http://localhost:8000/admin/category_add',
                     type: 'post',
                     data: {
                         name: recipientName,
                         slug: recipientblme
                     },
-                    success: (xhrData) => {
+                    success: xhrData => {
                         if (xhrData.code == 200) {
                             // console.log(xhrData);
                             cqAjax()
