@@ -72,14 +72,15 @@
                 <tfoot>
                     <tr>
                         <td colspan="3" class="text-center">
-                            <a href="#" class="btn btn-success" data-toggle="modal" data-target="#addModal">新增分类</a>
+                            <a href="#" class="btn btn-success btn-add" data-toggle="modal"
+                                data-target="#addModal">新增分类</a>
                         </td>
                     </tr>
                 </tfoot>
             </table>
         </div>
     </div>
-
+    <!-- 模态框 -->
     <div class="modal fade" id="addModal">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -89,13 +90,14 @@
                 </div>
                 <div class="modal-body">
                     <form>
+                        <input type="text" name="id">
                         <div class="form-group">
                             <label for="recipient-name" class="control-label">分类名称:</label>
-                            <input type="text" class="form-control" id="recipientName">
+                            <input type="text" class="form-control" id="recipientName" name="name">
                         </div>
                         <div class="form-group">
                             <label for="message-text" class="control-label">分类别名:</label>
-                            <input type="text" class="form-control" id="recipientblme">
+                            <input type="text" class="form-control" id="recipientblme" name="slug">
                         </div>
                     </form>
                 </div>
@@ -113,8 +115,8 @@
             <td>{{$value.name}}</td>
             <td>{{$value.slug}}</td>
             <td class="text-center">
-                <a href='javascript:editTr({"id":"1","slug":"uncategorized","name":"未分类"});' class="btn btn-info btn-xs">编辑</a>
-                <a href="javascript:deleteTr( 1 );" class="btn btn-danger btn-xs">删除</a>
+                <a href='javascript:editTr({"id":"{{$value.id}}","slug":"{{$value.slug}}","name":"{{$value.name}}"});' class="btn btn-info btn-xs">编辑</a>
+                <a href="javascript:deleteTr({{$value.id}});" class="btn btn-danger btn-xs">删除</a>
             </td>
         </tr>
         {{/each}}
@@ -127,8 +129,9 @@
                 backdrop: false
             });
 
+            //点击关闭弹窗
             $('#model_shutoff').click(function () {
-                alert('shutoff');
+                // alert('shutoff');
                 $('#addModal').modal('hide');
             });
 
@@ -146,7 +149,7 @@
                     url: 'http://localhost:8000/admin/category_search',
                     type: 'get',
                     success: (xhrData) => {
-                        console.log(xhrData);
+                        console.log(xhrData)
                         const html = template('lB-model', xhrData)
                         document.querySelector('tbody').innerHTML = html
                     }
@@ -159,23 +162,77 @@
 
 
 
-            $('#model_add').click(() => {
-                const recipientName = $('#recipientName').val()
-                const recipientblme = $('#recipientblme').val()
+
+            //文章类别点击删除
+            window.deleteTr = (data) => {
                 $.ajax({
-                    url: 'http://localhost:8000/admin/category_add',
+                    url: 'http://localhost:8000/admin/category_delete',
                     type: 'post',
                     data: {
-                        name: recipientName,
-                        slug: recipientblme
+                        id: data
                     },
-                    success: xhrData => {
+                    success: (xhrData) => {
+                        // console.log(xhrData);
                         if (xhrData.code == 200) {
-                            // console.log(xhrData);
                             cqAjax()
                         }
                     }
                 })
+            }
+
+            //编辑文章类别
+            window.editTr = (data) => {
+                for (const key in data) {
+                    $('input[name=' + key + ']').val(data[key])
+                }
+                $('#model_add').text('修改').addClass('btn-success')
+                $('.modal-title').text('修改内容')
+            }
+
+            //新增还原样式
+            $('.btn-add').click(() => {
+                $('.modal-title').text('新增内容')
+                $('#recipientName').val('')
+                $('#recipientblme').val('')
+                $('#model_add').text('新增').removeClass('btn-success')
+            })
+
+            //点击修改信息
+            $('#model_add').click(() => {
+                
+                if ($('#model_add').hasClass('btn-success')) {
+                    console.log($("form").serialize());
+
+                    $.ajax({
+                        url: 'http://localhost:8000/admin/category_edit',
+                        type: 'post',
+                        data: $("form").serialize(),
+                        success: xhrData => {
+                            if (xhrData.code == 200) {
+                                console.log(xhrData);
+                                cqAjax()
+                            }
+                        }
+                    })
+                } else {
+                    //点击增加分类
+                    const recipientName = $('#recipientName').val()
+                    const recipientblme = $('#recipientblme').val()
+                    $.ajax({
+                        url: 'http://localhost:8000/admin/category_add',
+                        type: 'post',
+                        data: {
+                            name: recipientName,
+                            slug: recipientblme
+                        },
+                        success: xhrData => {
+                            if (xhrData.code == 200) {
+                                console.log(xhrData);
+                                cqAjax()
+                            }
+                        }
+                    })
+                }
                 $('#addModal').modal('hide');
             });
 
