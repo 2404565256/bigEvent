@@ -308,6 +308,7 @@
             //分页计数器
             var myPage = 1
             var myTotalPage = 10
+            //   为了解决分页不能动态获取刷新 把它重新分成三部分
             var $pagination = $('.fy-page');
             var defaultOpts = {
                 //总页数
@@ -343,6 +344,8 @@
                     url: 'http://localhost:8000/admin/search',
                     data: {
                         page: myPage,
+
+                        
                         perpage: 8,
                         type: $('#selCategory').val(),
                         state: $('#selStatus').val()
